@@ -35,22 +35,22 @@ function App() {
   const [showAuth, setShowAuth] = useState(false);
 
   // Core databases
-  const [clients, setClients] = useState(isConfigured ? [] : INITIAL_CLIENTS);
-  const [services, setServices] = useState(isConfigured ? [] : INITIAL_SERVICES);
-  const [tasks, setTasks] = useState(isConfigured ? [] : INITIAL_TASKS);
-  const [leads, setLeads] = useState(isConfigured ? [] : INITIAL_LEADS);
-  const [invoices, setInvoices] = useState(isConfigured ? [] : INITIAL_INVOICES);
-  const [notifications, setNotifications] = useState(isConfigured ? [] : INITIAL_NOTIFICATIONS);
-  const [renegotiationLogs, setRenegotiationLogs] = useState(isConfigured ? [] : MOCK_RENEGOTIATION_LOGS);
-  const [serviceRequests, setServiceRequests] = useState(isConfigured ? [] : SERVICE_REQUESTS);
-  const [seoReports, setSeoReports] = useState(isConfigured ? [] : MOCK_SEO_REPORTS);
-  const [comments, setComments] = useState(isConfigured ? [] : MOCK_COMMENTS);
-  const [teamMembers, setTeamMembers] = useState(isConfigured ? [] : MOCK_TEAM);
-  const [projects, setProjects] = useState(isConfigured ? [] : MOCK_PROJECTS);
-  const [purchaseOrders, setPurchaseOrders] = useState(isConfigured ? [] : MOCK_PURCHASE_ORDERS);
+  const [clients, setClients] = useState([]);
+  const [services, setServices] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [leads, setLeads] = useState([]);
+  const [invoices, setInvoices] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [renegotiationLogs, setRenegotiationLogs] = useState([]);
+  const [serviceRequests, setServiceRequests] = useState([]);
+  const [seoReports, setSeoReports] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [purchaseOrders, setPurchaseOrders] = useState([]);
 
   // White-Label configuration
-  const [agencyName, setAgencyName] = useState('AuraScale');
+  const [agencyName, setAgencyName] = useState('');
   const [agencyLogo, setAgencyLogo] = useState('');
   const [brandColor, setBrandColor] = useState('indigo'); // indigo, emerald, violet, amber
   const [darkMode, setDarkMode] = useState(true);
@@ -59,11 +59,33 @@ function App() {
   const [showNotifications, setShowNotifications] = useState(false);
 
   // Live Activity log state
-  const [activityLogs, setActivityLogs] = useState([
-    { id: 'l1', time: '18:04:12', user: 'System Sync', action: 'Connected securely to scalable GraphQL backend gateway.', details: 'Node cluster running healthy' },
-    { id: 'l2', time: '17:15:30', user: 'Alex Rivera', action: 'Modified metadata title tags on Homepage Meta Tags task.', details: 'SEO optimized' },
-    { id: 'l3', time: '14:22:15', user: 'Admin (RAJIB)', action: 'Sent recurring monthly invoice batch #INV-101.', details: 'Retainer total: ₹5,310' }
-  ]);
+  const [activityLogs, setActivityLogs] = useState([]);
+
+  // Load White-Label config immediately on mount
+  useEffect(() => {
+    if (!isConfigured) {
+      setAgencyName('AuraScale');
+    } else {
+      const loadBranding = async () => {
+        try {
+          const configs = await firebaseService.getCollectionData('system_config', []);
+          const whiteLabel = configs.find(c => c.id === 'white_label');
+          if (whiteLabel) {
+            if (whiteLabel.agencyName) setAgencyName(whiteLabel.agencyName);
+            if (whiteLabel.agencyLogo) setAgencyLogo(whiteLabel.agencyLogo);
+            if (whiteLabel.brandColor) setBrandColor(whiteLabel.brandColor);
+            if (whiteLabel.darkMode !== undefined) setDarkMode(whiteLabel.darkMode);
+          } else {
+            setAgencyName('AuraScale');
+          }
+        } catch (err) {
+          console.error('Failed to load branding on mount:', err);
+          setAgencyName('AuraScale');
+        }
+      };
+      loadBranding();
+    }
+  }, []);
 
   // Sync dark mode style toggles globally
   useEffect(() => {
@@ -189,23 +211,19 @@ function App() {
         }
       } else {
         if (active) {
-          setInvoices(isConfigured ? [] : INITIAL_INVOICES);
-          setClients(isConfigured ? [] : INITIAL_CLIENTS);
-          setServices(isConfigured ? [] : INITIAL_SERVICES);
-          setTasks(isConfigured ? [] : INITIAL_TASKS);
-          setLeads(isConfigured ? [] : INITIAL_LEADS);
-          setNotifications(isConfigured ? [] : INITIAL_NOTIFICATIONS);
-          setRenegotiationLogs(isConfigured ? [] : MOCK_RENEGOTIATION_LOGS);
-          setServiceRequests(isConfigured ? [] : SERVICE_REQUESTS);
-          setSeoReports(isConfigured ? [] : MOCK_SEO_REPORTS);
-          setComments(isConfigured ? [] : MOCK_COMMENTS);
-          setTeamMembers(isConfigured ? [] : MOCK_TEAM);
-          setProjects(isConfigured ? [] : MOCK_PROJECTS);
-          setPurchaseOrders(isConfigured ? [] : MOCK_PURCHASE_ORDERS);
-          setAgencyName('AuraScale');
-          setAgencyLogo('');
-          setBrandColor('indigo');
-          setDarkMode(true);
+          setInvoices([]);
+          setClients([]);
+          setServices([]);
+          setTasks([]);
+          setLeads([]);
+          setNotifications([]);
+          setRenegotiationLogs([]);
+          setServiceRequests([]);
+          setSeoReports([]);
+          setComments([]);
+          setTeamMembers([]);
+          setProjects([]);
+          setPurchaseOrders([]);
           setHasFetched(false);
           setDbLoading(false);
         }
@@ -337,6 +355,39 @@ function App() {
     setActivityLogs(prev => [newLog, ...prev]);
   };
 
+  // Filter notifications based on role, company affiliation, or assignee email
+  const getFilteredNotifications = () => {
+    if (!currentUser) return [];
+    if (currentRole === 'admin') return notifications;
+
+    if (currentRole === 'team') {
+      const teamName = currentUser.displayName || '';
+      return notifications.filter(not => {
+        if (not.recipientEmail && not.recipientEmail === currentUser.email) return true;
+        if (not.recipientRole && not.recipientRole === 'team') return true;
+        const textToSearch = `${not.title} ${not.message}`.toLowerCase();
+        if (teamName && textToSearch.includes(teamName.toLowerCase())) return true;
+        if (not.type === 'task') return true;
+        return false;
+      });
+    }
+
+    if (currentRole === 'client') {
+      const clientRecord = clients.find(c => c.email === currentUser.email || c.portalEmail === currentUser.email || c.companyName?.toLowerCase() === currentUser.displayName?.toLowerCase());
+      const clientCompanyName = clientRecord ? clientRecord.companyName : '';
+      return notifications.filter(not => {
+        if (not.recipientEmail && not.recipientEmail === currentUser.email) return true;
+        if (not.recipientRole && not.recipientRole === 'client') return true;
+        if (not.clientName && clientCompanyName && not.clientName.toLowerCase() === clientCompanyName.toLowerCase()) return true;
+        const textToSearch = `${not.title} ${not.message}`.toLowerCase();
+        if (clientCompanyName && textToSearch.includes(clientCompanyName.toLowerCase())) return true;
+        if ((not.type === 'report' || not.type === 'billing') && clientCompanyName && textToSearch.includes(clientCompanyName.toLowerCase())) return true;
+        return false;
+      });
+    }
+    return [];
+  };
+
   // Mark single notifications as read
   const handleMarkNotificationRead = async (id) => {
     const notification = notifications.find(n => n.id === id);
@@ -397,7 +448,7 @@ function App() {
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
         currentRole={currentRole} 
-        notifications={notifications}
+        notifications={getFilteredNotifications()}
         agencyName={agencyName}
         agencyLogo={agencyLogo}
         brandColor={brandColor}
@@ -446,7 +497,7 @@ function App() {
                 className="p-2 bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 rounded-xl transition-all cursor-pointer relative"
               >
                 <Bell className="w-4 h-4" />
-                {notifications.filter(n => !n.read).length > 0 && (
+                {getFilteredNotifications().filter(n => !n.read).length > 0 && (
                   <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 border-2 border-slate-950 animate-ping" />
                 )}
               </button>
@@ -457,24 +508,31 @@ function App() {
                   <div className="flex justify-between items-center border-b border-slate-900 pb-2">
                     <span className="font-bold text-slate-200 uppercase tracking-wider text-[10px]">Recent Alerts</span>
                     <button 
-                      onClick={async () => {
-                        const updatedNotifications = notifications.map(n => ({ ...n, read: true }));
-                        try {
-                          await Promise.all(updatedNotifications.map(n => firebaseService.saveDocument('notifications', n.id, n)));
-                        } catch (err) {
-                          console.error('Failed to clear notifications:', err);
-                        }
+                      onClick={() => {
+                        const filtered = getFilteredNotifications();
+                        const updatedNotifications = notifications.map(n => {
+                          if (filtered.some(f => f.id === n.id)) {
+                            return { ...n, read: true };
+                          }
+                          return n;
+                        });
+                        
+                        // Optimistic state update: reflect changes instantly in the UI
                         setNotifications(updatedNotifications);
-                        logActivity('Notifications Cleared', 'Marked all system notifications as read.');
+                        logActivity('Notifications Cleared', 'Marked personal notifications as read.');
+
+                        // Perform database writes asynchronously in the background
+                        Promise.all(filtered.map(n => firebaseService.saveDocument('notifications', n.id, { ...n, read: true })))
+                          .catch(err => console.error('Failed to clear notifications in Firestore:', err));
                       }} 
                       className="text-[10px] text-indigo-400 hover:underline cursor-pointer"
                     >
                       Clear All
                     </button>
                   </div>
-
+ 
                   <div className="space-y-2.5 max-h-60 overflow-y-auto pr-0.5">
-                    {notifications.map((not) => (
+                    {getFilteredNotifications().map((not) => (
                       <div 
                         key={not.id}
                         onClick={() => handleMarkNotificationRead(not.id)}
@@ -512,7 +570,14 @@ function App() {
         </header>
 
         {/* Dynamic subpage router */}
-        <section className="flex-1 p-8">
+        <section className="flex-1 p-8 relative">
+          
+          {dbLoading && !hasFetched && (
+            <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm z-40 flex flex-col items-center justify-center select-none">
+              <div className="w-10 h-10 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mb-4" />
+              <span className="text-xs text-slate-400 font-semibold tracking-wide">Synchronizing live operations registry...</span>
+            </div>
+          )}
           
           {activeTab === 'overview' && (
             <Overview 

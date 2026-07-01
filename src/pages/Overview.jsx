@@ -530,16 +530,23 @@ export default function Overview({
         {/* Brand Command Welcome Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-6 bg-slate-900/40 border border-slate-900 rounded-3xl relative overflow-hidden backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-300">
           <div className="absolute top-[-20%] left-[-10%] w-[35%] h-[60%] rounded-full bg-violet-500/10 blur-[90px] pointer-events-none" />
-          <div className="relative z-10 space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-950/80 border border-slate-800 text-[10px] uppercase tracking-wider font-extrabold text-slate-400">
-              <Briefcase className="w-3.5 h-3.5 text-violet-400" /> Client Command Center
+          <div className="relative z-10 flex items-center gap-4 w-full sm:w-auto">
+            {clientRecord.logo && (
+              <div className="w-auto min-w-[48px] max-w-[144px] h-12 flex items-center justify-center overflow-hidden shrink-0 p-0.5">
+                <img src={clientRecord.logo} alt="Company Logo" className="h-full w-auto object-contain" />
+              </div>
+            )}
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-950/80 border border-slate-800 text-[10px] uppercase tracking-wider font-extrabold text-slate-400">
+                <Briefcase className="w-3.5 h-3.5 text-violet-400" /> Client Command Center
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black uppercase text-slate-100">
+                Welcome, <span className="text-violet-400">{companyName}</span> Hub
+              </h2>
+              <p className="text-xs text-slate-400">Track active billing retainers, search engine rankings, and request service upgrades.</p>
             </div>
-            <h2 className="text-xl sm:text-2xl font-black uppercase text-slate-100">
-              Welcome, <span className="text-violet-400">{companyName}</span> Hub
-            </h2>
-            <p className="text-xs text-slate-400">Track active billing retainers, search engine rankings, and request service upgrades.</p>
           </div>
-          <div className="shrink-0 flex items-center gap-2">
+          <div className="shrink-0 flex items-center gap-2 relative z-10">
             <span className="text-[10px] bg-slate-950 border border-slate-850 text-slate-400 px-3 py-1.5 rounded-full font-semibold flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" /> Agency Service Live
             </span>
@@ -738,7 +745,7 @@ export default function Overview({
     if (growthScenario === 'hyper') growthRate = 0.22; // 22%
 
     const data = [];
-    let currentMRR = mrr > 0 ? mrr : 12000;
+    let currentMRR = mrr;
     
     for(let i = 1; i <= projectionMonths; i++) {
       currentMRR = Math.round(currentMRR * (1 + growthRate));
@@ -826,7 +833,7 @@ export default function Overview({
           </div>
           <div className="mt-4">
             <h3 className="text-xs text-slate-400 font-medium">Global SEO Performance</h3>
-            <div className="text-2xl font-bold text-slate-100 mt-1">{(seoReports && seoReports[0]) ? seoReports[0].technicalScore : 84}% <span className="text-xs text-slate-500">Tech Score</span></div>
+            <div className="text-2xl font-bold text-slate-100 mt-1">{(seoReports && seoReports[0]) ? `${seoReports[0].technicalScore}%` : 'N/A'} <span className="text-xs text-slate-500">Tech Score</span></div>
           </div>
         </div>
 

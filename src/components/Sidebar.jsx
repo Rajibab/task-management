@@ -61,18 +61,22 @@ export default function Sidebar({
   return (
     <aside className="w-64 glassmorphism border-r border-slate-800 flex flex-col h-screen sticky top-0 shrink-0 z-30 select-none">
       {/* Brand Logo Header */}
-      <div className="p-6 border-b border-slate-800/60 flex items-center gap-3">
-        <div className="w-9 h-9 rounded-lg border border-slate-700 shadow-inner flex items-center justify-center overflow-hidden shrink-0 bg-slate-950">
-          {agencyLogo ? (
-            <img src={agencyLogo} alt="Agency Logo" className="w-full h-full object-cover" />
-          ) : (
-            <Sparkles className={`w-5 h-5 ${getBrandTextColor()} animate-pulse`} />
-          )}
-        </div>
-        <div>
-          <h1 className="text-lg font-bold bg-gradient-to-r from-slate-100 to-slate-300 bg-clip-text text-transparent tracking-wide leading-none">{agencyName}</h1>
-          <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">Agencies OS v1.2</span>
-        </div>
+      <div className="p-6 border-b border-slate-800/60 flex flex-col items-center justify-center select-none shrink-0">
+        {agencyLogo ? (
+          <div className="w-full h-14 flex items-center justify-start overflow-hidden rounded-xl p-0.5">
+            <img src={agencyLogo} alt={agencyName} className="max-w-full max-h-full object-contain" />
+          </div>
+        ) : (
+          <div className="flex items-center gap-3 w-full">
+            <div className="w-9 h-9 rounded-lg border border-slate-700 shadow-inner flex items-center justify-center overflow-hidden shrink-0 bg-slate-950">
+              <Sparkles className={`w-5 h-5 ${getBrandTextColor()} animate-pulse`} />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold bg-gradient-to-r from-slate-100 to-slate-300 bg-clip-text text-transparent tracking-wide leading-none">{agencyName || 'OmniMark OS'}</h1>
+              <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">Agencies OS v1.2</span>
+            </div>
+          </div>
+        )}
       </div>
 
 

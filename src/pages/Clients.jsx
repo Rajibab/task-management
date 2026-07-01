@@ -622,9 +622,9 @@ export default function Clients({
                 {/* Header: Logo avatar and status */}
                 <div className="flex justify-between items-start">
                   <div className="flex items-center gap-3">
-                    <div className="relative w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex items-center justify-center font-bold text-sm group/logo shrink-0">
+                    <div className="relative w-auto min-w-[40px] max-w-[96px] h-10 overflow-hidden flex items-center justify-center p-0.5 font-bold text-sm group/logo shrink-0">
                       {client.logo ? (
-                        <img src={client.logo} alt="Client Logo" className="w-full h-full object-cover" />
+                        <img src={client.logo} alt="Client Logo" className="h-full w-auto object-contain" />
                       ) : (
                         <span className={getBrandTextColor()}>{client.companyName.charAt(0)}</span>
                       )}
@@ -734,9 +734,9 @@ export default function Clients({
             {/* Header */}
             <div className="p-6 border-b border-slate-900 flex justify-between items-start bg-slate-900/40">
               <div className="flex items-center gap-4">
-                <div className="relative w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex items-center justify-center font-bold text-lg group/profile-logo shrink-0">
+                <div className="relative w-auto min-w-[48px] max-w-[144px] h-12 overflow-hidden flex items-center justify-center p-0.5 font-bold text-lg group/profile-logo shrink-0">
                   {selectedClient.logo ? (
-                    <img src={selectedClient.logo} alt="Client Logo" className="w-full h-full object-cover" />
+                    <img src={selectedClient.logo} alt="Client Logo" className="h-full w-auto object-contain" />
                   ) : (
                     <span className={getBrandTextColor()}>{selectedClient.companyName.charAt(0)}</span>
                   )}
@@ -1065,7 +1065,9 @@ export default function Clients({
                     />
                   </label>
                   {newClient.logo && (
-                    <img src={newClient.logo} alt="Logo Preview" className="w-8 h-8 rounded-lg object-cover border border-slate-750" />
+                    <div className="w-10 h-10 rounded-lg bg-slate-900 border border-slate-750 p-1 flex items-center justify-center overflow-hidden">
+                      <img src={newClient.logo} alt="Logo Preview" className="max-w-full max-h-full object-contain" />
+                    </div>
                   )}
                 </div>
               </div>
@@ -1311,7 +1313,9 @@ export default function Clients({
                     />
                   </label>
                   {editClientData.logo && (
-                    <img src={editClientData.logo} alt="Logo Preview" className="w-8 h-8 rounded-lg object-cover border border-slate-750" />
+                    <div className="w-10 h-10 rounded-lg bg-slate-900 border border-slate-750 p-1 flex items-center justify-center overflow-hidden">
+                      <img src={editClientData.logo} alt="Logo Preview" className="max-w-full max-h-full object-contain" />
+                    </div>
                   )}
                 </div>
               </div>
