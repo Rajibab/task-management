@@ -593,73 +593,26 @@ class FirebaseService {
     }
   }
 
-  // Load Invoices for active User
+  // Load Invoices for active User (queries standard collection and sorts latest-first)
   async getUserInvoices() {
     if (!this.currentUser) return [];
-
-    if (isConfigured) {
-      // Production Firestore Retrieval
-      try {
-        const q = query(collection(db, 'invoices'), where('userId', '==', this.currentUser.uid));
-        const querySnapshot = await getDocs(q);
-        const fbInvoices = [];
-        querySnapshot.forEach((docSnap) => {
-          fbInvoices.push({ id: docSnap.id, ...docSnap.data() });
-        });
-        
-        // In production mode, we NEVER seed mock invoices. Just return empty array if empty.
-        if (fbInvoices.length === 0) {
-          console.log("ℹ️ Invoices collection is empty in Firestore. Returning empty array.");
-          return [];
-        }
-
-        // Sort by id chronologically
-        return fbInvoices.sort((a, b) => b.id.localeCompare(a.id));
-      } catch (error) {
-        console.error('Firestore get invoices error:', error);
-        throw error; // Throw so that calling Promise.all fails!
-      }
-    } else {
-      // Local Storage Simulation Retrieval
-      await simulateDelay();
-      const storageKey = `omnimark_sim_invoices_${this.currentUser.uid}`;
-      const saved = localStorage.getItem(storageKey);
-      
-      if (!saved) {
-        // Return seeded initial default invoices list
-        return this._seedSimulatedInvoices(this.currentUser.uid);
-      }
-      return JSON.parse(saved);
+    try {
+      const invoices = await this.getCollectionData('invoices', INITIAL_INVOICES);
+      return invoices.sort((a, b) => b.id.localeCompare(a.id));
+    } catch (error) {
+      console.error('Failed to get invoices:', error);
+      throw error;
     }
   }
 
   // Save Invoices list securely (used for updates, new invoices, or renegotiations)
   async saveUserInvoices(invoicesList) {
     if (!this.currentUser) return;
-
-    if (isConfigured) {
-      // Production Firestore persistence
-      try {
-        const promises = invoicesList.map(async (invoice) => {
-          // Add userId metadata
-          const docData = {
-            ...invoice,
-            userId: this.currentUser.uid,
-            updatedAt: new Date().toISOString()
-          };
-          // Use invoice ID as doc path key
-          await setDoc(doc(db, 'invoices', invoice.id), docData);
-        });
-        await Promise.all(promises);
-      } catch (error) {
-        console.error('Firestore save invoices error:', error);
-        throw error;
-      }
-    } else {
-      // Local Storage simulation persistence
-      await simulateDelay();
-      const storageKey = `omnimark_sim_invoices_${this.currentUser.uid}`;
-      localStorage.setItem(storageKey, JSON.stringify(invoicesList));
+    try {
+      await this.saveCollectionData('invoices', invoicesList);
+    } catch (error) {
+      console.error('Failed to save invoices:', error);
+      throw error;
     }
   }
 

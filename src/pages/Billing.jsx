@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   IndianRupee, CreditCard, Clock, Plus, Trash2, Download, X, 
   FileText, CheckCircle2, AlertCircle, Calendar, Edit2, Info
@@ -61,24 +61,55 @@ export default function Billing({
     fileData: ''
   });
 
+  // Admin selected client filter state ('all' or a client.id)
+  const [selectedClientId, setSelectedClientId] = useState('all');
+
+  // Synchronize modal forms when selected client filter changes
+  useEffect(() => {
+    if (selectedClientId !== 'all') {
+      setPrjForm(prev => ({ ...prev, clientId: selectedClientId }));
+      setPoForm(prev => ({ ...prev, clientId: selectedClientId }));
+      setInvForm(prev => ({ ...prev, clientId: selectedClientId }));
+    } else {
+      const defaultClientId = clients[0]?.id || 'cli-1';
+      setPrjForm(prev => ({ ...prev, clientId: defaultClientId }));
+      setPoForm(prev => ({ ...prev, clientId: defaultClientId }));
+      setInvForm(prev => ({ ...prev, clientId: defaultClientId }));
+    }
+  }, [selectedClientId, clients]);
+
   // Resolve client company context
   const clientRecord = (currentRole === 'client' && currentUser)
     ? (clients.find(c => c.email?.toLowerCase() === currentUser.email?.toLowerCase()) || clients[0])
     : null;
   const companyName = clientRecord ? clientRecord.companyName : '';
 
-  // Filter datasets for Client role
+  // Resolve selected filter client record for admin
+  const selectedClientRecord = selectedClientId !== 'all'
+    ? clients.find(c => c.id === selectedClientId)
+    : null;
+
+  // Filter datasets based on active client context or selected filter
   const displayedProjects = currentRole === 'client'
     ? projects.filter(p => p.clientName?.toLowerCase() === companyName?.toLowerCase())
-    : projects;
+    : (selectedClientId === 'all'
+        ? projects
+        : projects.filter(p => p.clientId === selectedClientId || p.clientName?.toLowerCase() === selectedClientRecord?.companyName?.toLowerCase())
+      );
 
   const displayedPOs = currentRole === 'client'
     ? purchaseOrders.filter(po => po.clientName?.toLowerCase() === companyName?.toLowerCase())
-    : purchaseOrders;
+    : (selectedClientId === 'all'
+        ? purchaseOrders
+        : purchaseOrders.filter(po => po.clientId === selectedClientId || po.clientName?.toLowerCase() === selectedClientRecord?.companyName?.toLowerCase())
+      );
 
   const displayedInvoices = currentRole === 'client'
     ? invoices.filter(inv => inv.clientName?.toLowerCase() === companyName?.toLowerCase() || inv.clientEmail === currentUser?.email)
-    : invoices;
+    : (selectedClientId === 'all'
+        ? invoices
+        : invoices.filter(inv => inv.clientId === selectedClientId || inv.clientName?.toLowerCase() === selectedClientRecord?.companyName?.toLowerCase() || inv.clientEmail === selectedClientRecord?.email)
+      );
 
   // Current Date logic
   const currentDateStr = new Date().toISOString().split('T')[0]; // e.g. "2026-06-29"
@@ -431,6 +462,24 @@ Verify: https://jamtion-729e2.web.app/`;
           <h2 className="text-2xl font-bold tracking-tight text-slate-100">Financial Ledger & Invoices</h2>
           <p className="text-xs text-slate-400 mt-1">Audit active billing cycles, download corporate receipts, and manage project pricing.</p>
         </div>
+
+        {currentRole !== 'client' && (
+          <div className="flex items-center gap-2.5">
+            <span className="text-[10px] text-slate-500 font-extrabold uppercase tracking-wider">Client Context:</span>
+            <select
+              value={selectedClientId}
+              onChange={(e) => setSelectedClientId(e.target.value)}
+              className="bg-slate-950 border border-slate-850 hover:border-slate-800 text-xs text-slate-200 py-2.5 px-4 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/40 focus:border-indigo-500 font-semibold cursor-pointer transition-all min-w-[200px]"
+            >
+              <option value="all">📁 All Enterprise Partners</option>
+              {clients.map(c => (
+                <option key={c.id} value={c.id}>
+                  🏢 {c.companyName}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
       {/* SECTION 1: PROJECTS GRID */}
