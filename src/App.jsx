@@ -468,16 +468,6 @@ function App() {
             <h1 className="text-sm font-extrabold uppercase tracking-widest bg-gradient-to-r from-slate-200 to-slate-400 bg-clip-text text-transparent">
               {getPageTitle()}
             </h1>
-            
-            {/* Quick search input */}
-            <div className="relative hidden md:block w-64">
-              <Search className="w-3.5 h-3.5 absolute left-3 top-3 text-slate-500" />
-              <input 
-                type="text" 
-                placeholder="Global search index..." 
-                className="w-full bg-slate-900/50 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs focus:outline-none focus:border-slate-700 focus:ring-1 focus:ring-slate-700 text-slate-300"
-              />
-            </div>
           </div>
 
           <div className="flex items-center gap-4">

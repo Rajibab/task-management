@@ -137,72 +137,7 @@ export default function LoginGateway({ brandColor = 'indigo' }) {
 
           <div className="text-center space-y-1">
             <h2 className="text-lg font-bold text-slate-100">Authenticate Security Access</h2>
-            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Select your account profile role below</p>
-          </div>
-
-          {/* 3-Column Selectable Cards Layout */}
-          <div className="grid grid-cols-3 gap-3">
-            
-            {/* Super Admin Card */}
-            <button
-              type="button"
-              onClick={() => handleRoleSelect('admin')}
-              className={`p-3.5 rounded-2xl border text-center transition-all duration-200 cursor-pointer flex flex-col items-center justify-center space-y-2 group ${
-                selectedRole === 'admin' 
-                  ? `${getBrandActiveRing()} bg-slate-900/60` 
-                  : 'bg-slate-900/20 border-slate-900 hover:border-slate-850 hover:bg-slate-900/30'
-              }`}
-            >
-              <div className={`p-2 rounded-xl transition-all ${
-                selectedRole === 'admin' 
-                  ? 'bg-indigo-500/10 text-indigo-400' 
-                  : 'bg-slate-900 text-slate-400 group-hover:text-slate-200'
-              }`}>
-                <ShieldCheck className="w-5 h-5" />
-              </div>
-              <span className="text-[10px] font-extrabold uppercase tracking-wide block">Admin</span>
-            </button>
-
-            {/* Team Member Card */}
-            <button
-              type="button"
-              onClick={() => handleRoleSelect('team')}
-              className={`p-3.5 rounded-2xl border text-center transition-all duration-200 cursor-pointer flex flex-col items-center justify-center space-y-2 group ${
-                selectedRole === 'team' 
-                  ? `${getBrandActiveRing()} bg-slate-900/60` 
-                  : 'bg-slate-900/20 border-slate-900 hover:border-slate-850 hover:bg-slate-900/30'
-              }`}
-            >
-              <div className={`p-2 rounded-xl transition-all ${
-                selectedRole === 'team' 
-                  ? 'bg-emerald-500/10 text-emerald-400' 
-                  : 'bg-slate-900 text-slate-400 group-hover:text-slate-200'
-              }`}>
-                <Users className="w-5 h-5" />
-              </div>
-              <span className="text-[10px] font-extrabold uppercase tracking-wide block">Team</span>
-            </button>
-
-            {/* Client Card */}
-            <button
-              type="button"
-              onClick={() => handleRoleSelect('client')}
-              className={`p-3.5 rounded-2xl border text-center transition-all duration-200 cursor-pointer flex flex-col items-center justify-center space-y-2 group ${
-                selectedRole === 'client' 
-                  ? `${getBrandActiveRing()} bg-slate-900/60` 
-                  : 'bg-slate-900/20 border-slate-900 hover:border-slate-850 hover:bg-slate-900/30'
-              }`}
-            >
-              <div className={`p-2 rounded-xl transition-all ${
-                selectedRole === 'client' 
-                  ? 'bg-violet-500/10 text-violet-400' 
-                  : 'bg-slate-900 text-slate-400 group-hover:text-slate-200'
-              }`}>
-                <Briefcase className="w-5 h-5" />
-              </div>
-              <span className="text-[10px] font-extrabold uppercase tracking-wide block">Client</span>
-            </button>
-
+            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-semibold">Enter your credentials to access the platform</p>
           </div>
 
           {/* Form and Fields */}
