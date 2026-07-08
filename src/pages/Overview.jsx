@@ -648,10 +648,6 @@ export default function Overview({
                         </span>
                       </div>
                       <p className="text-[10px] text-slate-400 leading-normal">{srvDetails.deliverables}</p>
-                      <div className="border-t border-slate-850 pt-2 flex justify-between items-center text-[10px]">
-                        <span className="text-slate-500">Contract Rate:</span>
-                        <span className="font-extrabold text-slate-200">₹{srvDetails.price.toLocaleString('en-IN')} / {srvDetails.timeline}</span>
-                      </div>
                     </div>
                   );
                 })}
