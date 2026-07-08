@@ -333,6 +333,10 @@ function App() {
       console.log("🔒 RBAC Gate: Team member lacks Lead Pipeline Access. Redirecting to Executive Console.");
       setActiveTab('overview');
     }
+    if (currentRole === 'client' && activeTab === 'tasks') {
+      console.log("🔒 RBAC Gate: Client lacks Workflows Access. Redirecting to Executive Console.");
+      setActiveTab('overview');
+    }
   }, [currentRole, activeTab, hasLeadAccess]);
 
   // Action: Append new items to activity ledger

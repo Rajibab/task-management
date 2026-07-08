@@ -26,7 +26,7 @@ export default function Sidebar({
     { id: 'reports', label: 'Reports', icon: FolderOpen, roles: ['admin', 'team', 'client'] },
     { id: 'billing', label: 'Billing & Invoices', icon: CreditCard, roles: ['admin', 'client'] },
     { id: 'crm', label: 'Lead Pipeline', icon: Sparkles, roles: ['admin', 'team'] },
-    { id: 'tasks', label: 'Workflows', icon: CheckSquare, roles: ['admin', 'team', 'client'] },
+    { id: 'tasks', label: 'Workflows', icon: CheckSquare, roles: ['admin', 'team'] },
     { id: 'settings', label: 'White-Label Config', icon: Settings, roles: ['admin'] }
   ];
 
