@@ -428,7 +428,6 @@ export default function Overview({
       activeServices: ['SEO Optimization', 'Google Ads Management', 'Online Reputation Management'],
       monthlyBilling: 4500,
       projectStatus: 'On Track',
-      documents: ['Master_Engagement_Agreement.pdf'],
       closingDate: '2026-12-31'
     };
 

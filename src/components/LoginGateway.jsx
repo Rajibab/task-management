@@ -97,18 +97,18 @@ export default function LoginGateway({ brandColor = 'indigo' }) {
         <div className="lg:col-span-5 space-y-6 text-center lg:text-left pr-0 lg:pr-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-[10px] uppercase tracking-wider font-extrabold text-slate-400">
             <Sparkles className={`w-3.5 h-3.5 ${getBrandTextColor()} animate-spin-slow`} />
-            Next-Gen Operating System
+            Powered by Jamtion
           </div>
           
           <div className="space-y-3">
             <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white leading-tight uppercase">
-              AuraScale <br/>
+              Jamtion OS <br/>
               <span className="bg-gradient-to-r from-slate-200 via-slate-400 to-slate-200 bg-clip-text text-transparent">
-                Agency Console
+                Enterprise Hub
               </span>
             </h1>
             <p className="text-xs text-slate-400 leading-relaxed max-w-md mx-auto lg:mx-0">
-              Welcome back to your high-performance CRM, Billing, and digital campaign builder gateway. Authenticate with your secure role credentials.
+              Welcome back to your customized enterprise partner, workspace workflow, and analytics hub. Authenticate to access your dedicated viewport.
             </p>
           </div>
 
@@ -116,15 +116,15 @@ export default function LoginGateway({ brandColor = 'indigo' }) {
           <div className="hidden lg:block space-y-3 text-xs text-slate-400">
             <div className="flex items-center gap-2.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span>Role-Based Multi-Dashboard Viewports</span>
+              <span>Jamtion Workspace Environment</span>
             </div>
             <div className="flex items-center gap-2.5">
               <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
-              <span>Session-Safe Onboarding Engine</span>
+              <span>Enterprise-Grade Access Security</span>
             </div>
             <div className="flex items-center gap-2.5">
               <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
-              <span>Production Firestore & Secure Storage</span>
+              <span>Real-Time Collaboration Platform</span>
             </div>
           </div>
         </div>

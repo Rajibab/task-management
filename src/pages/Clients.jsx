@@ -152,7 +152,6 @@ export default function Clients({
       portalPassword: portalPasswordVal,
       id: `cli-${Date.now()}`,
       monthlyBilling: parseFloat(newClient.monthlyBilling) || 0,
-      documents: ['Master_Engagement_Agreement.pdf'],
       activeServices: newClient.activeServices.length > 0 ? newClient.activeServices : ['SEO Optimization']
     };
 
@@ -332,28 +331,7 @@ export default function Clients({
     }
   };
 
-  // Action: Add mock document file
-  const handleUploadMockDoc = async (clientId) => {
-    const docName = prompt('Enter the file name to upload (e.g. Campaign_Brief_Q3.pdf):');
-    if (!docName) return;
 
-    const targetClient = clients.find(c => c.id === clientId);
-    if (!targetClient) return;
-
-    const docs = targetClient.documents ? [...targetClient.documents, docName] : [docName];
-    const updatedClient = { ...targetClient, documents: docs };
-
-    try {
-      await firebaseService.saveDocument('clients', clientId, updatedClient);
-      setClients(prev => prev.map(c => c.id === clientId ? updatedClient : c));
-      if (selectedClient && selectedClient.id === clientId) {
-        setSelectedClient(updatedClient);
-      }
-      logActivity('Document Asset Uploaded', `Uploaded ${docName} to ${updatedClient.companyName} portal directory.`);
-    } catch (err) {
-      console.error('Failed to save uploaded document to database:', err);
-    }
-  };
 
   // Color mappings
   const getBrandTextColor = () => {
@@ -901,31 +879,6 @@ export default function Clients({
                   </div>
                 </div>
               )}
-
-              {/* Documents and Files Vault */}
-              <div>
-                <div className="flex justify-between items-center mb-2.5">
-                  <h4 className="text-xs font-bold text-slate-400">Documents Vault</h4>
-                  <button 
-                    onClick={() => handleUploadMockDoc(selectedClient.id)}
-                    className="text-[9px] uppercase font-bold text-indigo-400 hover:underline cursor-pointer"
-                  >
-                    + Upload Document
-                  </button>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  {selectedClient.documents && selectedClient.documents.map((doc, index) => (
-                    <div 
-                      key={index}
-                      className="p-3 bg-slate-900/25 border border-slate-900 hover:border-slate-800 rounded-xl flex items-center gap-2.5 text-xs text-slate-300 transition-all select-none cursor-pointer"
-                      onClick={() => alert(`Opening document asset file: "${doc}"`)}
-                    >
-                      <FileText className="w-4 h-4 text-indigo-400 shrink-0" />
-                      <span className="truncate">{doc}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
 
             </div>
 
