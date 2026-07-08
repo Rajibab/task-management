@@ -270,8 +270,7 @@ export default function Services({
       (currentUser && currentUser.displayName && t.assignee.toLowerCase() === currentUser.displayName.toLowerCase())
     );
 
-    const pendingRequests = serviceRequests.filter(req => req.status === 'Pending');
-    const approvedRequests = serviceRequests.filter(req => req.status === 'Approved');
+
 
     const todoCount = myTasks.filter(t => t.status === 'Todo').length;
     const inProgressCount = myTasks.filter(t => t.status === 'In Progress').length;
@@ -331,10 +330,10 @@ export default function Services({
           ))}
         </div>
 
-        {/* Dynamic Split Layout: Assigned Tasks left, Services request pipeline right */}
+        {/* Dynamic Split Layout: Assigned Tasks */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left: Assigned Tasks */}
-          <div className="lg:col-span-6 space-y-4">
+          <div className="lg:col-span-12 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-900 pb-3">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
                 <CheckSquare className={`w-4 h-4 ${getBrandTextColor()}`} /> Assigned Tasks ({myTasks.length})
@@ -375,97 +374,6 @@ export default function Services({
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Right: Service Requests pipelines */}
-          <div className="lg:col-span-6 space-y-6">
-            
-            {/* Service Request Approval Pipeline Card */}
-            <div className="p-5 bg-slate-900 border border-slate-800/80 rounded-2xl space-y-4">
-              <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                <ChevronRight className={`w-3.5 h-3.5 ${getBrandTextColor()}`} /> Service Request Approval Pipeline
-              </h3>
-              
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left text-slate-300">
-                  <thead className="text-[9px] uppercase font-bold text-slate-500 border-b border-slate-850 bg-slate-950/20">
-                    <tr>
-                      <th className="py-2.5 px-3">Brand</th>
-                      <th className="py-2.5 px-3">Campaign</th>
-                      <th className="py-2.5 px-3 text-center">Billing Cost</th>
-                      <th className="py-2.5 px-3 text-right">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-850/60">
-                    {pendingRequests.map((req) => (
-                      <tr key={req.id} className="hover:bg-slate-950/10 transition-colors">
-                        <td className="py-3 px-3 font-bold text-slate-200 truncate max-w-[100px]">{req.clientName}</td>
-                        <td className="py-3 px-3 font-semibold text-indigo-300 truncate max-w-[120px]">{req.serviceName}</td>
-                        <td className="py-3 px-3 text-center">
-                          <span className="text-[9px] bg-slate-950 border border-slate-850 px-2 py-0.5 rounded text-slate-400 font-extrabold select-none inline-flex items-center gap-1">🔒 MASKED (Team)</span>
-                        </td>
-                        <td className="py-3 px-3 text-right">
-                          <span className="text-[8px] font-extrabold uppercase bg-amber-500/10 border border-amber-500/20 text-amber-400 px-2 py-0.5 rounded-full">
-                            Pending
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                    {pendingRequests.length === 0 && (
-                      <tr>
-                        <td colSpan="4" className="py-6 text-center text-slate-500 font-semibold italic text-[10px]">
-                          No pending service requests in queue.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Approved Service Requests Card */}
-            <div className="p-5 bg-slate-900 border border-slate-800/80 rounded-2xl space-y-4">
-              <h3 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
-                <ChevronRight className={`w-3.5 h-3.5 ${getBrandTextColor()}`} /> Approved Service Requests
-              </h3>
-              
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left text-slate-300">
-                  <thead className="text-[9px] uppercase font-bold text-slate-500 border-b border-slate-850 bg-slate-950/20">
-                    <tr>
-                      <th className="py-2.5 px-3">Brand</th>
-                      <th className="py-2.5 px-3">Campaign</th>
-                      <th className="py-2.5 px-3 text-center">Billing Cost</th>
-                      <th className="py-2.5 px-3 text-right">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-850/60">
-                    {approvedRequests.map((req) => (
-                      <tr key={req.id} className="hover:bg-slate-950/10 transition-colors">
-                        <td className="py-3 px-3 font-bold text-slate-200 truncate max-w-[100px]">{req.clientName}</td>
-                        <td className="py-3 px-3 font-semibold text-indigo-300 truncate max-w-[120px]">{req.serviceName}</td>
-                        <td className="py-3 px-3 text-center">
-                          <span className="text-[9px] bg-slate-950 border border-slate-850 px-2 py-0.5 rounded text-slate-400 font-extrabold select-none inline-flex items-center gap-1">🔒 MASKED (Team)</span>
-                        </td>
-                        <td className="py-3 px-3 text-right">
-                          <span className="text-[8px] font-extrabold uppercase bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full">
-                            Approved
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                    {approvedRequests.length === 0 && (
-                      <tr>
-                        <td colSpan="4" className="py-6 text-center text-slate-500 font-semibold italic text-[10px]">
-                          No approved service requests found.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
           </div>
         </div>
 
