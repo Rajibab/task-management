@@ -541,7 +541,7 @@ export default function Overview({
                 <Briefcase className="w-3.5 h-3.5 text-violet-400" /> Client Command Center
               </div>
               <h2 className="text-xl sm:text-2xl font-black uppercase text-slate-100">
-                Welcome, <span className="text-violet-400">{companyName}</span> Hub
+                Welcome, <span className="text-violet-400">{companyName}</span>
               </h2>
               <p className="text-xs text-slate-400">Track active billing retainers, search engine rankings, and request service upgrades.</p>
             </div>
@@ -588,20 +588,33 @@ export default function Overview({
           </div>
 
           {/* KPI 3: Account Closing Date */}
-          <div className={`p-5 rounded-2xl bg-slate-950/40 backdrop-blur-md shadow-xl flex items-center gap-4 border ${
-            (clientRecord.closingDate && clientRecord.closingDate < '2026-06-29')
-              ? 'border-2 border-red-550/80 shadow-[0_0_15px_rgba(239,68,68,0.25)] bg-red-950/5 animate-pulse'
-              : 'border-slate-900'
-          }`}>
-            <div className="p-3 bg-slate-900/60 border border-slate-800 rounded-xl">
-              <Calendar className="w-5 h-5 text-indigo-400" />
-            </div>
-            <div>
-              <span className="text-[10px] text-slate-500 uppercase tracking-wider font-bold block">Account Closing Date</span>
-              <span className="text-sm font-bold text-slate-200 mt-0.5 block">{clientRecord.closingDate || 'Not Specified'}</span>
-              <span className="text-[8px] text-slate-500 font-semibold block mt-0.5">Current Date: 2026-06-29</span>
-            </div>
-          </div>
+          {(() => {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const isExpired = clientRecord.closingDate && clientRecord.closingDate < todayStr;
+            return (
+              <div className={`p-5 rounded-2xl backdrop-blur-md shadow-xl flex items-center gap-4 border transition-all ${
+                isExpired
+                  ? 'border-2 border-red-500/80 shadow-[0_0_20px_rgba(239,68,68,0.3)] bg-red-950/10'
+                  : 'bg-slate-950/40 border-slate-900'
+              }`}>
+                <div className={`p-3 rounded-xl border ${isExpired ? 'bg-red-500/10 border-red-500/30' : 'bg-slate-900/60 border-slate-800'}`}>
+                  <Calendar className={`w-5 h-5 ${isExpired ? 'text-red-400' : 'text-indigo-400'}`} />
+                </div>
+                <div className="flex-1">
+                  <span className="text-[10px] text-slate-500 uppercase tracking-wider font-bold block">Account Closing Date</span>
+                  <span className={`text-sm font-bold mt-0.5 block ${isExpired ? 'text-red-400' : 'text-slate-200'}`}>
+                    {clientRecord.closingDate || 'Not Specified'}
+                  </span>
+                  <span className="text-[8px] text-slate-500 font-semibold block mt-0.5">Current Date: {todayStr}</span>
+                  {isExpired && (
+                    <span className="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 bg-red-500/15 border border-red-500/40 text-red-400 text-[8px] font-extrabold uppercase tracking-wider rounded-full animate-pulse">
+                      ⚠ Contract Expired
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
 
           {/* KPI 4 */}
           <div className="p-5 rounded-2xl bg-slate-950/40 backdrop-blur-md border border-slate-900 shadow-xl flex items-center gap-4">

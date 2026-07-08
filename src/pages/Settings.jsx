@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Settings, Sparkles, Globe, Mail, Shield, 
-  CheckCircle, Key, RefreshCw, Upload, Eye, Sun, Moon 
+  CheckCircle, Key, RefreshCw, Upload, Eye 
 } from 'lucide-react';
 import firebaseService from '../firebaseService';
 
@@ -148,43 +148,17 @@ export default function SettingsPage({
 
             <div className="space-y-4 text-xs">
               
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-slate-400 font-medium">Agency / Enterprise Name</label>
-                  <input 
-                    type="text" required
-                    value={agencyName}
-                    onChange={(e) => {
-                      setAgencyName(e.target.value);
-                      setLogoText(e.target.value);
-                    }}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-200 focus:outline-none"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-slate-400 font-medium">Core Workspace Theme Mode</label>
-                  <div className="flex bg-slate-950 p-1 border border-slate-800 rounded-lg">
-                    <button
-                      type="button"
-                      onClick={() => setDarkMode(true)}
-                      className={`flex-1 py-1.5 rounded-md text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer transition-all ${
-                        darkMode ? `${getBrandBg()} text-white` : 'text-slate-400 hover:text-slate-200'
-                      }`}
-                    >
-                      <Moon className="w-3.5 h-3.5" /> Dark Mode
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setDarkMode(false)}
-                      className={`flex-1 py-1.5 rounded-md text-[10px] font-bold flex items-center justify-center gap-1 cursor-pointer transition-all ${
-                        !darkMode ? `${getBrandBg()} text-white` : 'text-slate-400 hover:text-slate-200'
-                      }`}
-                    >
-                      <Sun className="w-3.5 h-3.5" /> Light Mode
-                    </button>
-                  </div>
-                </div>
+              <div className="space-y-1">
+                <label className="text-slate-400 font-medium">Agency / Enterprise Name</label>
+                <input 
+                  type="text" required
+                  value={agencyName}
+                  onChange={(e) => {
+                    setAgencyName(e.target.value);
+                    setLogoText(e.target.value);
+                  }}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-200 focus:outline-none"
+                />
               </div>
 
               {/* Theme color selectors */}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { 
   Plus, Search, SlidersHorizontal, Globe, Mail, Phone, 
   Trash2, Edit, X, FolderOpen, FileText, CheckCircle, Clock,
-  Key, RefreshCw, Eye, EyeOff, ShieldCheck, ToggleLeft, ToggleRight, UserCheck
+  Key, RefreshCw, Eye, EyeOff, ShieldCheck, ToggleLeft, ToggleRight, UserCheck, AlertTriangle, Calendar
 } from 'lucide-react';
 import firebaseService from '../firebaseService';
 
@@ -613,10 +613,17 @@ export default function Clients({
       ) : (
         /* RENDER VIEW: CLIENTS DIRECTORY */
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredClients.map((client) => (
+          {filteredClients.map((client) => {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const isContractExpired = client.closingDate && client.closingDate < todayStr;
+            return (
             <div 
               key={client.id}
-              className="p-5 rounded-2xl glassmorphism-card border border-slate-800 flex flex-col justify-between"
+              className={`p-5 rounded-2xl glassmorphism-card flex flex-col justify-between transition-all ${
+                isContractExpired
+                  ? 'border-2 border-red-500/70 shadow-[0_0_20px_rgba(239,68,68,0.2)] bg-red-950/5'
+                  : 'border border-slate-800'
+              }`}
             >
               <div>
                 {/* Header: Logo avatar and status */}
@@ -650,6 +657,14 @@ export default function Clients({
                   </span>
                 </div>
 
+                {/* Expired contract warning badge */}
+                {isContractExpired && (
+                  <div className="mt-3 flex items-center gap-1.5 px-2.5 py-1.5 bg-red-500/10 border border-red-500/30 rounded-xl">
+                    <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0" />
+                    <span className="text-[9px] font-extrabold text-red-400 uppercase tracking-wider">Contract Expired — {client.closingDate}</span>
+                  </div>
+                )}
+
                 {/* Contact row details */}
                 <div className="space-y-2 mt-5 text-[10px] text-slate-400 border-t border-slate-900/60 pt-4">
                   <div className="flex items-center gap-2">
@@ -662,6 +677,12 @@ export default function Clients({
                       {client.website.replace('https://', '')}
                     </a>
                   </div>
+                  {client.closingDate && !isContractExpired && (
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-slate-600" />
+                      <span>Contract until: <span className="text-slate-300 font-semibold">{client.closingDate}</span></span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Service list pills */}
@@ -714,7 +735,8 @@ export default function Clients({
               </div>
 
             </div>
-          ))}
+            );
+          })}
 
           {filteredClients.length === 0 && (
             <div className="col-span-full py-12 text-center bg-slate-950/40 border border-slate-900 rounded-2xl">
@@ -754,6 +776,15 @@ export default function Clients({
                 <div>
                   <h3 className="text-base font-bold text-slate-100">{selectedClient.companyName}</h3>
                   <p className="text-xs text-slate-500 mt-0.5">Manager Contact: <span className="text-slate-300 font-semibold">{selectedClient.contactPerson}</span></p>
+                  {(() => {
+                    const todayStr = new Date().toISOString().split('T')[0];
+                    const expired = selectedClient.closingDate && selectedClient.closingDate < todayStr;
+                    return expired ? (
+                      <span className="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 bg-red-500/15 border border-red-500/40 text-red-400 text-[9px] font-extrabold uppercase tracking-wider rounded-full animate-pulse">
+                        <AlertTriangle className="w-3 h-3" /> Contract Expired · {selectedClient.closingDate}
+                      </span>
+                    ) : null;
+                  })()}
                 </div>
               </div>
               <div className="flex gap-2">
@@ -792,6 +823,20 @@ export default function Clients({
                   <div className="text-slate-300 flex items-center gap-1.5"><span className="text-slate-500">Workflow Velocity:</span> 
                     <span className="bg-emerald-500/15 text-emerald-400 px-1.5 py-0.5 rounded font-extrabold text-[9px]">{selectedClient.projectStatus}</span>
                   </div>
+                  {selectedClient.closingDate && (() => {
+                    const todayStr = new Date().toISOString().split('T')[0];
+                    const expired = selectedClient.closingDate < todayStr;
+                    return (
+                      <div className="text-slate-300 flex items-center gap-1.5">
+                        <span className="text-slate-500">Contract Closing:</span>
+                        <span className={`px-1.5 py-0.5 rounded font-extrabold text-[9px] ${
+                          expired ? 'bg-red-500/15 text-red-400' : 'bg-slate-800 text-slate-300'
+                        }`}>
+                          {selectedClient.closingDate} {expired ? '⚠ Expired' : '✓ Active'}
+                        </span>
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
 

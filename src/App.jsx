@@ -23,7 +23,7 @@ import {
   MOCK_PROJECTS, MOCK_PURCHASE_ORDERS
 } from './mockData';
 
-import { Bell, Search, Sun, Moon, HelpCircle } from 'lucide-react';
+import { Bell, HelpCircle } from 'lucide-react';
 
 function App() {
   // Navigation & Role states
@@ -476,14 +476,6 @@ function App() {
 
           <div className="flex items-center gap-4">
             
-            {/* Dark mode switch */}
-            <button 
-              onClick={() => setDarkMode(!darkMode)}
-              className="p-2 bg-slate-900/60 hover:bg-slate-900 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-slate-200 rounded-xl transition-all cursor-pointer"
-            >
-              {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </button>
-
             {/* Notification bell center */}
             <div className="relative">
               <button 
