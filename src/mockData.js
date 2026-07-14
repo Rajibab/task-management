@@ -33,6 +33,6 @@ export const MOCK_PURCHASE_ORDERS = [];
 export const MOCK_COMMENTS = [];
 
 export const MOCK_TEAM = [
-  { id: 'tm-1', name: 'Alex Rivera', email: 'alex@aurascale.io', role: 'team', jobTitle: 'SEO Team Lead', workload: '0 Tasks Active', leadPipelineAccess: false, password: 'team123', avatar: '' },
-  { id: 'tm-2', name: 'Chloe Chen', email: 'team@aurascale.io', role: 'team', jobTitle: 'PPC Specialist', workload: '0 Tasks Active', leadPipelineAccess: true, password: 'team123', avatar: '' }
+  { id: 'tm-1', name: 'Alex Rivera', email: 'alex@aurascale.io', role: 'team', jobTitle: 'SEO Team Lead', workload: '0 Tasks Active', leadPipelineAccess: false, billingInvoiceAccess: false, password: 'team123', avatar: '' },
+  { id: 'tm-2', name: 'Chloe Chen', email: 'team@aurascale.io', role: 'team', jobTitle: 'PPC Specialist', workload: '0 Tasks Active', leadPipelineAccess: true, billingInvoiceAccess: true, password: 'team123', avatar: '' }
 ];

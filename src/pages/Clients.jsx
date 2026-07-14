@@ -43,6 +43,7 @@ export default function Clients({
   const [newTeamMember, setNewTeamMember] = useState({
     name: '', email: '', password: '', jobTitle: '',
     workload: '0 Tasks Active', leadPipelineAccess: false,
+    billingInvoiceAccess: false,
     avatar: ''
   });
   const [editTeamMemberData, setEditTeamMemberData] = useState(null);
@@ -278,6 +279,7 @@ export default function Clients({
     setNewTeamMember({
       name: '', email: '', password: '', jobTitle: '',
       workload: '0 Tasks Active', leadPipelineAccess: false,
+      billingInvoiceAccess: false,
       avatar: ''
     });
     setIsAddTeamOpen(false);
@@ -523,13 +525,22 @@ export default function Clients({
                     </div>
                   </div>
                   
-                  <span className={`text-[8px] font-extrabold uppercase border px-2 py-0.5 rounded-full shadow-inner ${
-                    tm.leadPipelineAccess 
-                      ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
-                      : 'bg-slate-800 border-slate-700 text-slate-400'
-                  }`}>
-                    {tm.leadPipelineAccess ? 'Leads Active' : 'No Lead Access'}
-                  </span>
+                  <div className="flex flex-col items-end gap-1 select-none">
+                    <span className={`text-[8px] font-extrabold uppercase border px-2 py-0.5 rounded-full shadow-inner leading-none ${
+                      tm.leadPipelineAccess 
+                        ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
+                        : 'bg-slate-800 border-slate-700 text-slate-400'
+                    }`}>
+                      {tm.leadPipelineAccess ? 'Leads Active' : 'No Lead Access'}
+                    </span>
+                    <span className={`text-[8px] font-extrabold uppercase border px-2 py-0.5 rounded-full shadow-inner leading-none ${
+                      tm.billingInvoiceAccess 
+                        ? 'bg-indigo-500/10 border-indigo-500/30 text-indigo-400' 
+                        : 'bg-slate-800 border-slate-700 text-slate-400'
+                    }`}>
+                      {tm.billingInvoiceAccess ? 'Billing Active' : 'No Billing Access'}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Operations details */}
@@ -1551,6 +1562,24 @@ export default function Clients({
                     )}
                   </button>
                 </div>
+
+                <div className="flex items-center justify-between py-1 border-t border-slate-950/40 pt-2">
+                  <div>
+                    <span className="text-slate-200 font-semibold block text-xs">Billing & Invoice Access</span>
+                    <span className="text-slate-500 text-[10px] block mt-0.5">Allow team member to view & manage billing records, projects, and invoices.</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setNewTeamMember({...newTeamMember, billingInvoiceAccess: !newTeamMember.billingInvoiceAccess})}
+                    className="p-1 hover:bg-slate-850 rounded text-slate-400 transition-colors cursor-pointer"
+                  >
+                    {newTeamMember.billingInvoiceAccess ? (
+                      <ToggleRight className="w-9 h-9 text-emerald-400" />
+                    ) : (
+                      <ToggleLeft className="w-9 h-9 text-slate-500" />
+                    )}
+                  </button>
+                </div>
               </div>
 
             </div>
@@ -1700,6 +1729,24 @@ export default function Clients({
                     className="p-1 hover:bg-slate-850 rounded text-slate-400 transition-colors cursor-pointer"
                   >
                     {editTeamMemberData.leadPipelineAccess ? (
+                      <ToggleRight className="w-9 h-9 text-emerald-400" />
+                    ) : (
+                      <ToggleLeft className="w-9 h-9 text-slate-500" />
+                    )}
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between py-1 border-t border-slate-950/40 pt-2">
+                  <div>
+                    <span className="text-slate-200 font-semibold block text-xs">Billing & Invoice Access</span>
+                    <span className="text-slate-500 text-[10px] block mt-0.5">Allow team member to view & manage billing records, projects, and invoices.</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setEditTeamMemberData({...editTeamMemberData, billingInvoiceAccess: !editTeamMemberData.billingInvoiceAccess})}
+                    className="p-1 hover:bg-slate-850 rounded text-slate-400 transition-colors cursor-pointer"
+                  >
+                    {editTeamMemberData.billingInvoiceAccess ? (
                       <ToggleRight className="w-9 h-9 text-emerald-400" />
                     ) : (
                       <ToggleLeft className="w-9 h-9 text-slate-500" />

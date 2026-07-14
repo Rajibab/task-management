@@ -15,7 +15,8 @@ export default function Sidebar({
   currentUser = null,
   onOpenAuth = () => {},
   onSignOut = () => {},
-  hasLeadAccess = false
+  hasLeadAccess = false,
+  hasBillingAccess = false
 }) {
   const unreadNotifications = notifications.filter(n => !n.read).length;
 
@@ -24,7 +25,7 @@ export default function Sidebar({
     { id: 'clients', label: 'Client CRM', icon: Users, roles: ['admin', 'team'] },
     { id: 'services', label: 'Service Hub', icon: Layers, roles: ['admin', 'team', 'client'] },
     { id: 'reports', label: 'Reports', icon: FolderOpen, roles: ['admin', 'team', 'client'] },
-    { id: 'billing', label: 'Billing & Invoices', icon: CreditCard, roles: ['admin', 'client'] },
+    { id: 'billing', label: 'Billing & Invoices', icon: CreditCard, roles: ['admin', 'team', 'client'] },
     { id: 'crm', label: 'Lead Pipeline', icon: Sparkles, roles: ['admin', 'team'] },
     { id: 'tasks', label: 'Workflows', icon: CheckSquare, roles: ['admin', 'team'] },
     { id: 'settings', label: 'White-Label Config', icon: Settings, roles: ['admin'] }
@@ -33,6 +34,7 @@ export default function Sidebar({
   const filteredMenuItems = menuItems.filter(item => {
     if (!item.roles.includes(currentRole)) return false;
     if (currentRole === 'team' && item.id === 'crm' && !hasLeadAccess) return false;
+    if (currentRole === 'team' && item.id === 'billing' && !hasBillingAccess) return false;
     return true;
   });
 

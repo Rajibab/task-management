@@ -326,6 +326,7 @@ function App() {
     : null;
     
   const hasLeadAccess = currentRole === 'admin' || (activeTeamMember ? activeTeamMember.leadPipelineAccess : false);
+  const hasBillingAccess = currentRole === 'admin' || (activeTeamMember ? activeTeamMember.billingInvoiceAccess : false);
 
   // Router security gate redirection
   useEffect(() => {
@@ -333,11 +334,15 @@ function App() {
       console.log("🔒 RBAC Gate: Team member lacks Lead Pipeline Access. Redirecting to Executive Console.");
       setActiveTab('overview');
     }
+    if (currentRole === 'team' && activeTab === 'billing' && !hasBillingAccess) {
+      console.log("🔒 RBAC Gate: Team member lacks Billing & Invoice Access. Redirecting to Executive Console.");
+      setActiveTab('overview');
+    }
     if (currentRole === 'client' && activeTab === 'tasks') {
       console.log("🔒 RBAC Gate: Client lacks Workflows Access. Redirecting to Executive Console.");
       setActiveTab('overview');
     }
-  }, [currentRole, activeTab, hasLeadAccess]);
+  }, [currentRole, activeTab, hasLeadAccess, hasBillingAccess]);
 
   // Action: Append new items to activity ledger
   const logActivity = (action, details = '') => {
@@ -460,6 +465,7 @@ function App() {
         onOpenAuth={() => setShowAuth(true)}
         onSignOut={() => firebaseService.signOut()}
         hasLeadAccess={hasLeadAccess}
+        hasBillingAccess={hasBillingAccess}
       />
 
       {/* Main viewport */}
